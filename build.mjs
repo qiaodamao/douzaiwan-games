@@ -17,8 +17,7 @@ const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const LEGACY_TITLE = "<title>正在游戏 - 都在玩</title>";
 const META_MARK = "<!--BUILD:META-->";
 const GAME_MARK = "<!--BUILD:GAME-->";
-const NUM_RE = /^\d+$/;
-const SLUG_RE = /^[a-z][a-z0-9-]*$/;
+const SLUG_RE = /^[a-z0-9][a-z0-9-]*$/;
 const COVER_NAMES = ["cover.png", "cover.jpg", "cover.jpeg", "cover.webp", "cover.gif"];
 const idColl = new Intl.Collator(undefined, { numeric: true });
 
@@ -44,8 +43,8 @@ function scanGames() {
     const dir = path.join(listDir, name);
     if (!fs.statSync(dir).isDirectory()) continue;
     const slugOk = SLUG_RE.test(name) && name.length <= 50 && !name.endsWith("-");
-    if (!NUM_RE.test(name) && !slugOk) {
-      err(`目录名 "${name}" 不合法：新游戏请用小写字母开头的 slug（仅 [a-z0-9-]）`);
+    if (!slugOk) {
+      err(`目录名 "${name}" 不合法：请用小写字母或数字开头的 slug（仅 [a-z0-9-]，不超过 50 字符，不以 - 结尾）`);
       continue;
     }
     const jsonPath = path.join(dir, "game.json");

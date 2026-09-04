@@ -3,6 +3,7 @@ window.GAMES = [
   { id: "1", img: "thumbs/1.webp", title: "维京战争", cat: "动作", emoji: "🛡️", entry: "index.html", hot: false },
   { id: "2", img: "thumbs/2.webp", title: "Space Huggers", cat: "动作", emoji: "👾", entry: "index.html", hot: true },
   { id: "3", img: "thumbs/3.webp", title: "报刊先生", cat: "休闲", emoji: "📰", entry: "index.html", hot: false },
+  { id: "3d-bowling", img: "thumbs/3d-bowling.webp", title: "3D保龄球", cat: "体育", emoji: "🎳", entry: "index.html", hot: false },
   { id: "4", img: "thumbs/4.webp", title: "植物大战僵尸", cat: "策略", emoji: "🌱", entry: "index.htm", hot: true },
   { id: "5", img: "thumbs/5.webp", title: "3D魔方", cat: "益智", emoji: "🧩", entry: "index.html", hot: false },
   { id: "6", img: "thumbs/6.webp", title: "青蛙吃苍蝇", cat: "休闲", emoji: "🐸", entry: "index.html", hot: false },
@@ -70,4 +71,5 @@ window.GAMES = [
   { id: "75", img: "thumbs/75.webp", title: "森林协奏曲", cat: "休闲", emoji: "🎵", entry: "index.html", hot: false },
   { id: "76", img: "thumbs/76.webp", title: "斗地主", cat: "棋牌", emoji: "🃏", entry: "index.html", hot: true },
   { id: "79", img: "thumbs/79.webp", title: "召唤神龙", cat: "休闲", emoji: "🐉", entry: "index.html", hot: true },
+  { id: "eight-ball", img: "thumbs/eight-ball.webp", title: "8 Ball Pool 桌球", cat: "休闲", emoji: "🎱", entry: "index.html", hot: false },
 ];

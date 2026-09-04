@@ -12,7 +12,7 @@ H5 小游戏聚合站，收录 **70 款**免费网页小游戏，打开即玩，
 ├── thumbs/      # 封面缩略图（构建自动生成）
 ├── build.mjs    # 构建脚本
 └── list/        # 游戏目录，每个子目录一款游戏
-    └── <id>/    # 目录名即游戏 id（旧游戏为数字，新游戏用小写字母开头的 slug）
+    └── <id>/    # 目录名即游戏 id（小写字母或数字开头的 slug）
         ├── …    # 游戏本体文件
         ├── game.json  # 元数据：title / cat / emoji / entry / hot
         └── cover.png  # 封面（png / jpg / jpeg / webp / gif）
@@ -22,7 +22,7 @@ H5 小游戏聚合站，收录 **70 款**免费网页小游戏，打开即玩，
 
 新增游戏：
 
-1. 在 `list/` 下新建目录，目录名为小写字母开头的 slug（仅 `[a-z0-9-]`，如 `list/space-huggers/`），放入游戏文件；
+1. 在 `list/` 下新建目录，目录名为小写字母或数字开头的 slug（仅 `[a-z0-9-]`，如 `list/space-huggers/`、`list/2048-game/`），放入游戏文件；
 2. 目录内添加 `game.json`（`entry` 为入口文件，默认 `index.html`；`hot` 为是否推荐）和封面 `cover.png`（或 .jpg 等）；
 3. 首次运行 `npm install`，之后执行 `npm run build`；
 4. 提交游戏目录与自动生成的 `data.js` / `thumbs/` / `g/<slug>.html`。

@@ -17,60 +17,6 @@
       body {
         background: #000000;
       }
-/* 像素风格按钮 */
- .more-games-btn {
-   position: fixed;
-   top: 20px;
-   right: 20px;
-   z-index: 9999;
-   display: block;
-   width: 48px;
-   height: 48px;
-   background: #4cc9f0;
-   border: 4px solid #2b2d42;
-   border-radius: 8px;
-   color: white;
-   font-size: 24px;
-   text-align: center;
-   line-height: 48px;
-   text-decoration: none;
-   box-shadow: 4px 4px 0 #2b2d42;
-   transition: all 0.2s ease;
-   cursor: pointer;
- }
- 
- .more-games-btn::after {
-   content: "更多游戏";
-   position: absolute;
-   right: 60px;
-   top: 50%;
-   transform: translateY(-50%); /* 这已经确保整体框垂直居中 */
-   white-space: nowrap;
-   background: #2b2d42;
-   color: white;
-   padding: 8px 12px; /* 调整上下padding使文字居中 */
-   border-radius: 4px;
-   font-size: 14px;
-   line-height: 1; /* 关键：重置行高为1 */
-   opacity: 0;
-   transition: opacity 0.3s ease;
-   pointer-events: none;
-   border: 2px solid #4cc9f0;
-   display: flex; /* 新增：使用flex布局确保完美居中 */
-   align-items: center; /* 新增：垂直居中 */
-   justify-content: center; /* 新增：水平居中 */
-   height: auto; /* 移除固定高度 */
- }
- 
- .more-games-btn:hover {
-   transform: translate(2px, 2px);
-   box-shadow: 2px 2px 0 #2b2d42;
-   background: #4895ef;
- }
- 
- .more-games-btn:hover::after {
-   opacity: 1;
- }
      </style>
     <script>
       window.famobi_gameID = "8-ball-billiards-classic";
@@ -98,6 +44,5 @@
     <center>
       <div id="mygame"></div>
     </center>
-    <a href="https://game.haiyong.site/" class="more-games-btn" target="_blank">🎮</a>
   </body>
 </html>

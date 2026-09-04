@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>星球防御 - 都在玩</title>
+<meta name="description" content="在线免费玩星球防御（射击），手机电脑直接玩，无需下载。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+<style>
+  :root {
+    --bar: #1f2330;
+    --brand1: #6366f1;
+    --brand2: #8b5cf6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bar); display: flex; flex-direction: column;
+  }
+  .topbar {
+    flex: none; height: 44px; display: flex; align-items: center; gap: 6px;
+    padding: 0 10px; color: #fff; background: transparent;
+    position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+    pointer-events: none;
+  }
+  .topbar .btn { pointer-events: auto; }
+  .topbar .title {
+    flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 600;
+  }
+  .topbar .title .emoji { font-size: 18px; }
+  .topbar .title span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .btn {
+    flex: none; border: none; cursor: pointer; color: #e5e7eb;
+    background: rgba(255,255,255,.08); border-radius: 10px;
+    height: 32px; padding: 0 11px; font-size: 13px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: background .15s;
+  }
+  .btn:hover { background: rgba(255,255,255,.18); }
+  .btn svg { width: 14px; height: 14px; }
+  .btn-back { justify-content: center; }
+  /* 铺满窗口选中态不加背景色，仅通过图标区分 */
+
+  #frameWrap { flex: 1; position: relative; overflow: hidden; background: #000; }
+  #frame {
+    position: absolute; left: 0; top: 0;
+    border: none; background: #000;
+  }
+
+  /* 全屏时隐藏顶栏 */
+  body:fullscreen .topbar, body:-webkit-full-screen .topbar { display: none; }
+
+  .loading {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px; color: #9ca3af;
+    background: #171a26; font-size: 14px; pointer-events: none; opacity: 1;
+    transition: opacity .3s; z-index: 5;
+  }
+  .spinner {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 3px solid #374151; border-top-color: var(--brand1);
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hidden { opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="btn btn-back" id="back" title="返回" aria-label="返回">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+  </button>
+  <div class="title"><span class="emoji" id="gEmoji">🎮</span><span id="gTitle">加载中…</span></div>
+  <button class="btn active" id="fitBtn" title="铺满窗口" aria-label="铺满窗口">
+    <svg id="fitIconOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+    <svg id="fitIconOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+  </button>
+  <button class="btn" id="refresh" title="重新加载" aria-label="重新加载">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+  </button>
+  <button class="btn" id="fs" title="全屏" aria-label="全屏">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+  </button>
+  <button class="btn" id="newWin" title="在新窗口打开游戏" aria-label="在新窗口打开游戏">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>
+  </button>
+</div>
+
+<div id="frameWrap">
+  <div class="loading" id="loading"><div class="spinner"></div>游戏加载中，请稍候…</div>
+  <iframe id="frame" allow="autoplay; fullscreen; gamepad" allowfullscreen></iframe>
+</div>
+
+<script src="../data.js"></script>
+<script>window.GAME = {"id":"21","title":"星球防御","cat":"射击","emoji":"🪐","entry":"index.html","hot":false,"img":"../thumbs/21.webp"};</script>
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var id = params.get("id");   // 字符串："2" 或 "space-huggers"
+  var games = window.GAMES || [];
+  var g = window.GAME || (id != null && games.find(function (x) { return String(x.id) === String(id); }));
+
+  document.title = g ? (g.title + " - 都在玩") : "游戏未找到";
+
+  var frame = document.getElementById("frame");
+  var wrap = document.getElementById("frameWrap");
+  var loading = document.getElementById("loading");
+  var fitBtn = document.getElementById("fitBtn");
+
+  if (!g) {
+    document.getElementById("gTitle").textContent = "游戏不存在 (id=" + id + ")";
+    loading.innerHTML = '<div style="font-size:40px">😿</div>没有找到这款游戏，<a href="../index.html" style="color:#818cf8">返回首页</a>';
+    return;
+  }
+
+  document.getElementById("gEmoji").textContent = g.emoji;
+  document.getElementById("gTitle").textContent = g.title;
+
+  var fitMode = true;          // 铺满窗口开关
+  var retryTimer = null;
+
+  // 计算 iframe 内实际游戏内容的包围盒。用 offset 尺寸和位置，避免 CSS 动画/变换导致临时测不准。
+  function contentBBox() {
+    var d;
+    try { d = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document); } catch (e) { return null; }
+    if (!d || !d.body) return null;
+    var vw = wrap.clientWidth, vh = wrap.clientHeight;
+    var L = Infinity, T = Infinity, R = -Infinity, B = -Infinity, found = false;
+    var kids = d.body.children;
+    for (var i = 0; i < kids.length; i++) {
+      var el = kids[i], x = 0, y = 0, w, h, r;
+      try { r = el.getBoundingClientRect(); } catch (e) { continue; }
+      w = el.offsetWidth; h = el.offsetHeight;
+      if (!w || !h) continue;
+      for (var p = el; p && p !== d.body; p = p.offsetParent) {
+        x += p.offsetLeft; y += p.offsetTop;
+      }
+      if (w < 2 || h < 2) continue;
+      if (x + w < 0 || y + h < 0 || x > vw || y > vh) continue;
+      try {
+        var cs = d.defaultView.getComputedStyle(el);
+        if (cs && (cs.display === "none" || cs.visibility === "hidden")) continue;
+      } catch (e) {}
+      found = true;
+      if (x < L) L = x;
+      if (y < T) T = y;
+      if (x + w > R) R = x + w;
+      if (y + h > B) B = y + h;
+    }
+    if (!found) return null;
+    return { w: R - L, h: B - T, cx: (L + R) / 2, cy: (T + B) / 2 };
+  }
+
+  function applyFit() {
+    var vw = wrap.clientWidth, vh = wrap.clientHeight;
+    if (!vw || !vh) return;
+    // 基准状态：左上角对齐、铺满容器（iframe 内部自行滚动）
+    frame.style.transform = "none";
+    frame.style.transformOrigin = "50% 50%";
+    frame.style.width = vw + "px";
+    frame.style.height = vh + "px";
+    if (!fitMode) return;
+
+    var bb = contentBBox();
+    if (!bb || bb.w < 80 || bb.h < 80) return;
+    // 内容已基本铺满视口 → 无需处理
+    if (bb.w >= vw * 0.98 && bb.h >= vh * 0.98) return;
+
+    // 等比缩放使内容铺满容器；支持放大也支持缩小，只在接近 1:1 时跳过
+    var s = Math.min(vw / bb.w, vh / bb.h);
+    if (!isFinite(s)) return;
+    if (s > 3) s = 3;
+    if (s < 0.6) s = 0.6;
+    if (s > 0.98 && s < 1.02) return;
+
+    frame.style.transformOrigin = bb.cx + "px " + bb.cy + "px";
+    frame.style.transform = "translate(" + (vw / 2 - bb.cx) + "px," + (vh / 2 - bb.cy) + "px) scale(" + s + ")";
+  }
+
+  function scheduleFit() {
+    // 游戏脚本常常延迟布局，多试几次
+    [200, 600, 1500, 3000].forEach(function (t) { setTimeout(applyFit, t); });
+  }
+
+  fitBtn.addEventListener("click", function () {
+    fitMode = !fitMode;
+    fitBtn.classList.toggle("active", fitMode);
+    fitBtn.title = fitMode ? "铺满窗口" : "原始大小";
+    fitBtn.setAttribute("aria-label", fitBtn.title);
+    document.getElementById("fitIconOn").style.display = fitMode ? "" : "none";
+    document.getElementById("fitIconOff").style.display = fitMode ? "none" : "";
+    applyFit();
+  });
+
+  window.addEventListener("resize", applyFit);
+
+  frame.src = "../list/" + g.id + "/" + g.entry;
+
+  frame.addEventListener("load", function () {
+    setTimeout(function () { loading.classList.add("hidden"); }, 400);
+    applyFit(); scheduleFit();
+  });
+  // 兜底：即使 onload 不触发也隐藏 loading 并尝试适配
+  setTimeout(function () { loading.classList.add("hidden"); }, 8000);
+  scheduleFit();
+
+  document.getElementById("back").addEventListener("click", function () {
+    if (history.length > 1) history.back();
+    else location.href = "../index.html";
+  });
+
+  document.getElementById("refresh").addEventListener("click", function () {
+    loading.classList.remove("hidden");
+    frame.src = frame.src;
+  });
+
+  document.getElementById("fs").addEventListener("click", function () {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(function () {});
+  });
+
+  document.getElementById("newWin").addEventListener("click", function () {
+    var url = "../list/" + g.id + "/" + g.entry;
+    window.open(url, "_blank", "noopener");
+  });
+})();
+</script>
+</body>
+</html>

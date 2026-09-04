@@ -122,22 +122,28 @@
   var fitMode = true;          // 铺满窗口开关
   var retryTimer = null;
 
-  // 计算 iframe 内实际游戏内容的包围盒。用 offset 尺寸和位置，避免 CSS 动画/变换导致临时测不准。
+  // 计算 iframe 内实际游戏内容的包围盒。用 getBoundingClientRect 并加回滚动量：
+  // 它反映真实视觉位置（含 CSS transform —— 很多游戏用 translate(-50%,-50%) 居中画布，
+  // offsetLeft/offsetTop 测不到 transform，会把已居中的内容误判成偏右下，导致适配时推出屏幕外）。
   function contentBBox() {
     var d;
     try { d = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document); } catch (e) { return null; }
     if (!d || !d.body) return null;
     var vw = wrap.clientWidth, vh = wrap.clientHeight;
+    var sx = 0, sy = 0;
+    try {
+      sx = (d.documentElement && d.documentElement.scrollLeft) || d.body.scrollLeft || 0;
+      sy = (d.documentElement && d.documentElement.scrollTop) || d.body.scrollTop || 0;
+    } catch (e) {}
     var L = Infinity, T = Infinity, R = -Infinity, B = -Infinity, found = false;
     var kids = d.body.children;
     for (var i = 0; i < kids.length; i++) {
-      var el = kids[i], x = 0, y = 0, w, h, r;
+      var el = kids[i], x, y, w, h, r;
       try { r = el.getBoundingClientRect(); } catch (e) { continue; }
-      w = el.offsetWidth; h = el.offsetHeight;
+      if (!r) continue;
+      x = r.left + sx; y = r.top + sy;
+      w = r.width; h = r.height;
       if (!w || !h) continue;
-      for (var p = el; p && p !== d.body; p = p.offsetParent) {
-        x += p.offsetLeft; y += p.offsetTop;
-      }
       if (w < 2 || h < 2) continue;
       if (x + w < 0 || y + h < 0 || x > vw || y > vh) continue;
       try {

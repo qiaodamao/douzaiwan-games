@@ -14,7 +14,7 @@ H5 小游戏聚合站，收录 **70 款**免费网页小游戏，打开即玩，
 └── list/        # 游戏目录，每个子目录一款游戏
     └── <id>/    # 目录名即游戏 id（小写字母或数字开头的 slug）
         ├── …    # 游戏本体文件
-        ├── game.json  # 元数据：title / cat / emoji / entry / hot
+        ├── game.json  # 元数据：title / cat / entry / hot
         └── cover.png  # 封面（png / jpg / jpeg / webp / gif）
 ```
 

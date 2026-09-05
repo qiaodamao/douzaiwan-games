@@ -59,7 +59,7 @@ function scanGames() {
       err(`list/${name}/game.json 解析失败：${e.message}`);
       continue;
     }
-    for (const f of ["title", "cat", "emoji"]) {
+    for (const f of ["title", "cat"]) {
       if (typeof meta[f] !== "string" || !meta[f].trim()) err(`list/${name}/ game.json 字段 "${f}" 缺失或为空`);
     }
     if (typeof meta.entry !== "string" || !meta.entry.trim()) {
@@ -92,7 +92,7 @@ function runMigration() {
     if (!fs.existsSync(dir)) { console.error(`  跳过 id=${g.id}：list/${g.id}/ 目录不存在`); missingDir++; continue; }
     const jsonPath = path.join(dir, "game.json");
     if (fs.existsSync(jsonPath)) { skipped++; continue; }
-    const meta = { title: g.title, cat: g.cat, emoji: g.emoji, entry: g.entry, hot: !!g.hot };
+    const meta = { title: g.title, cat: g.cat, entry: g.entry, hot: !!g.hot };
     fs.writeFileSync(jsonPath, JSON.stringify(meta, null, 2) + "\n", "utf8");
     created++;
   }
@@ -139,7 +139,7 @@ function generateDataJs(games) {
   const sorted = [...games].sort((a, b) => idColl.compare(a.id, b.id));
   const lines = sorted.map((g) => {
     const img = g.cover ? `img: "thumbs/${g.id}.webp", ` : "";
-    return `  { id: ${JSON.stringify(g.id)}, ${img}title: ${JSON.stringify(g.meta.title)}, cat: ${JSON.stringify(g.meta.cat)}, emoji: ${JSON.stringify(g.meta.emoji)}, entry: ${JSON.stringify(g.meta.entry)}, hot: ${g.meta.hot ? "true" : "false"} },`;
+    return `  { id: ${JSON.stringify(g.id)}, ${img}title: ${JSON.stringify(g.meta.title)}, cat: ${JSON.stringify(g.meta.cat)}, entry: ${JSON.stringify(g.meta.entry)}, hot: ${g.meta.hot ? "true" : "false"} },`;
   });
   const out = `// 此文件由 build.mjs 自动生成，请勿手改。数据源：list/<目录名>/game.json\nwindow.GAMES = [\n${lines.join("\n")}\n];\n`;
   fs.writeFileSync(path.join(ROOT, "data.js"), out, "utf8");
@@ -158,7 +158,7 @@ function generatePages(games) {
   fs.mkdirSync(pagesDir, { recursive: true });
   for (const g of games) {
     const desc = g.meta.desc || `在线免费玩${g.meta.title}（${g.meta.cat}），手机电脑直接玩，无需下载。`;
-    const game = { id: g.id, title: g.meta.title, cat: g.meta.cat, emoji: g.meta.emoji, entry: g.meta.entry, hot: !!g.meta.hot };
+    const game = { id: g.id, title: g.meta.title, cat: g.meta.cat, entry: g.meta.entry, hot: !!g.meta.hot };
     if (g.cover) game.img = `../thumbs/${g.id}.webp`;
     const inline = JSON.stringify(game).replace(/<\//g, "<\\/"); // 防 </script> 破坏
     const page = template

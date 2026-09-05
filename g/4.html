@@ -29,7 +29,6 @@
     flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px;
     font-size: 15px; font-weight: 600;
   }
-  .topbar .title .emoji { font-size: 18px; }
   .topbar .title span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .btn {
     flex: none; border: none; cursor: pointer; color: #e5e7eb;
@@ -73,7 +72,7 @@
   <button class="btn btn-back" id="back" title="返回" aria-label="返回">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
   </button>
-  <div class="title"><span class="emoji" id="gEmoji">🎮</span><span id="gTitle">加载中…</span></div>
+  <div class="title"><span id="gTitle">加载中…</span></div>
   <button class="btn active" id="fitBtn" title="铺满窗口" aria-label="铺满窗口">
     <svg id="fitIconOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
     <svg id="fitIconOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
@@ -95,7 +94,7 @@
 </div>
 
 <script src="../data.js"></script>
-<script>window.GAME = {"id":"4","title":"植物大战僵尸","cat":"策略","emoji":"🌱","entry":"index.htm","hot":true,"img":"../thumbs/4.webp"};</script>
+<script>window.GAME = {"id":"4","title":"植物大战僵尸","cat":"策略","entry":"index.htm","hot":true,"img":"../thumbs/4.webp"};</script>
 <script>
 (function () {
   var params = new URLSearchParams(location.search);
@@ -116,7 +115,6 @@
     return;
   }
 
-  document.getElementById("gEmoji").textContent = g.emoji;
   document.getElementById("gTitle").textContent = g.title;
 
   var fitMode = true;          // 铺满窗口开关

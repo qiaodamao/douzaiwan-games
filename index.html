@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>都在玩 - H5小游戏免费在线玩</title>
+<title>都在玩 - 小游戏免费在线玩</title>
 <meta name="description" content="都在玩聚合站，收录多款免费H5网页小游戏：休闲、益智、射击、动作、棋牌、体育，打开即玩无需下载。">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+<link rel="icon" type="image/svg+xml" href="images/logo-d.svg">
 <style>
   :root {
     --bg: #ffffff;
@@ -19,6 +19,7 @@
     --shadow: 0 2px 10px rgba(31,35,48,.07);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { overflow-y: scroll; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
     background: var(--bg); color: var(--text);
@@ -40,9 +41,9 @@
     justify-self: start; display: flex; align-items: center; gap: 7px;
     font-size: 19px; font-weight: 700; color: var(--text); white-space: nowrap;
   }
-  .logo .paw { width: 40px; height: 40px; display: block; }
+  .logo .paw { width: 24px; height: 24px; display: block; border-radius: 6px; }
   .nav-menu {
-    justify-self: center; display: flex; align-items: center; justify-content: center; gap: 4px;
+    justify-self: center; display: flex; align-items: center; justify-content: center; gap: 10px;
     max-width: 100%; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
   }
   .nav-menu::-webkit-scrollbar { display: none; }
@@ -52,7 +53,7 @@
     cursor: pointer; user-select: none; white-space: nowrap;
     transition: all .15s;
   }
-  .nav-item:hover { color: var(--brand1); background: #eef0fb; }
+  .nav-item:hover { color: var(--text); background: #f3f4f6; border-radius: 999px; }
   .nav-item.active { color: #fff; background: #111111; border-radius: 999px; }
   .nav-right { justify-self: end; }
   .menu-toggle {
@@ -63,7 +64,7 @@
   .navbar .btn-lucky { height: 34px; font-size: 13.5px; padding: 0 16px; border-radius: 999px; }
 
   /* ===== 搜索条 ===== */
-  .toolbar-wrap { max-width: 1440px; margin: 28px auto 0; padding: 0 20px; }
+  .toolbar-wrap { max-width: 1440px; margin: 28px auto 0; padding: 0 20px; scroll-margin-top: 66px; }
   .toolbar {
     background: var(--card); border-radius: var(--radius);
     box-shadow: 0 8px 24px rgba(31,35,48,.10);
@@ -95,6 +96,8 @@
   .grid-info { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
   .grid-info h2 { font-size: 19px; }
   .grid-info span { font-size: 13px; color: var(--sub); }
+  .section { margin-bottom: 46px; }
+  .section:last-child { margin-bottom: 0; }
   .grid {
     display: grid; gap: 64px 56px;
     grid-template-columns: repeat(7, 1fr);
@@ -171,7 +174,7 @@
 
 <nav class="navbar">
   <div class="navbar-inner">
-    <a class="logo" href="index.html"><img class="paw" src="images/logo.svg" alt="logo">都在玩</a>
+    <a class="logo" href="index.html"><img class="paw" src="images/logo-d.svg" alt="logo">都在玩</a>
     <div class="nav-menu" id="navMenu">
       <span class="nav-item active" data-nav="全部">首页</span>
       <span class="nav-item" data-nav="__hot__">热门</span>
@@ -203,13 +206,7 @@
   </div>
 </div>
 
-<main>
-  <div class="grid-info">
-    <h2 id="gridTitle">全部游戏</h2>
-    <span id="gridCount"></span>
-  </div>
-  <div class="grid" id="grid"></div>
-</main>
+<main id="sections"></main>
 
 <footer>
   都在玩 · 共收录 <b id="footCount">80</b> 款免费 H5 小游戏 · 素材来源于网络，仅供学习交流
@@ -225,13 +222,12 @@
     ["#ede9fe", "#ddd6fe"], ["#ffedd5", "#fed7aa"]
   ];
 
-  var grid = document.getElementById("grid");
-  var gridTitle = document.getElementById("gridTitle");
-  var gridCount = document.getElementById("gridCount");
+  var sections = document.getElementById("sections");
   var searchInput = document.getElementById("search");
   var activeCat = "全部";
   var keyword = "";
   var idColl = new Intl.Collator(undefined, { numeric: true });
+  var CAT_ORDER = ["休闲", "益智", "射击", "动作", "棋牌", "体育", "策略"];
 
   document.getElementById("footCount").textContent = games.length;
 
@@ -248,6 +244,13 @@
     '</a>';
   }
 
+  function sectionHTML(title, list) {
+    return '<section class="section">' +
+      '<div class="grid-info"><h2>' + title + '</h2><span>共 ' + list.length + ' 款</span></div>' +
+      '<div class="grid">' + list.map(cardHTML).join("") + '</div>' +
+    '</section>';
+  }
+
   function render() {
     var list = games.filter(function (g) {
       var okCat = activeCat === "全部" || activeCat === "__hot__" ? true : g.cat === activeCat;
@@ -257,11 +260,27 @@
     });
     // 热门优先
     list.sort(function (a, b) { return (b.hot - a.hot) || idColl.compare(String(a.id), String(b.id)); });
-    grid.innerHTML = list.length
-      ? list.map(cardHTML).join("")
-      : '<div class="empty">😵 没找到相关游戏，换个关键词试试吧</div>';
-    gridTitle.textContent = activeCat === "全部" ? "全部游戏" : (activeCat === "__hot__" ? "🔥 热门推荐" : activeCat + "游戏");
-    gridCount.textContent = "共 " + list.length + " 款";
+    if (!list.length) {
+      sections.innerHTML = '<div class="empty">😵 没找到相关游戏，换个关键词试试吧</div>';
+      return;
+    }
+    var html;
+    if (activeCat === "全部") {
+      // 首页视图：第一个区块展示热门游戏，其后按分类分组（分类顺序与导航一致）
+      var hot = list.filter(function (g) { return g.hot; });
+      html = hot.length ? sectionHTML("🔥 热门游戏", hot) : "";
+      var groups = {};
+      for (var i = 0; i < list.length; i++) (groups[list[i].cat] = groups[list[i].cat] || []).push(list[i]);
+      var cats = Object.keys(groups).sort(function (a, b) {
+        var ia = CAT_ORDER.indexOf(a); if (ia < 0) ia = 99;
+        var ib = CAT_ORDER.indexOf(b); if (ib < 0) ib = 99;
+        return ia - ib;
+      });
+      for (var j = 0; j < cats.length; j++) html += sectionHTML(cats[j] + "游戏", groups[cats[j]]);
+    } else {
+      html = sectionHTML(activeCat === "__hot__" ? "🔥 热门推荐" : activeCat + "游戏", list);
+    }
+    sections.innerHTML = html;
   }
 
   function renderNav() {
@@ -281,7 +300,7 @@
     if (!el) return;
     setCat(el.dataset.nav);
     document.getElementById("navMenu").classList.remove("open");
-    document.querySelector("main").scrollIntoView({ behavior: "smooth", block: "start" });
+    // 原地切换，保持当前视口位置，避免页面上下跳动
   });
 
   document.getElementById("menuToggle").addEventListener("click", function () {

@@ -116,7 +116,7 @@
 
   if (!g) {
     document.getElementById("gTitle").textContent = "游戏不存在 (id=" + id + ")";
-    loading.innerHTML = '<div style="font-size:40px">😿</div>没有找到这款游戏，<a href="../index.html" style="color:#818cf8">返回首页</a>';
+    loading.innerHTML = '<div style="font-size:40px">😿</div>没有找到这款游戏，<a href="../" style="color:#818cf8">返回首页</a>';
     return;
   }
 
@@ -218,7 +218,7 @@
 
   document.getElementById("back").addEventListener("click", function () {
     if (history.length > 1) history.back();
-    else location.href = "../index.html";
+    else location.href = "../";
   });
 
   document.getElementById("refresh").addEventListener("click", function () {

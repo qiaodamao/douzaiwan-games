@@ -31,6 +31,25 @@ H5 小游戏聚合站，收录 **70 款**免费网页小游戏，打开即玩，
 
 > 旧数据迁移：`node build.mjs migrate`（从手写版 data.js 生成各游戏 game.json 与封面，已执行过，幂等可重跑）。
 
+## 如何运行构建
+
+前提：本机已安装 [Node.js](https://nodejs.org)（建议 LTS 版本）。终端执行 `node -v` 有版本号输出即已安装；提示"不是内部或外部命令"则先去官网安装。
+
+在项目根目录执行：
+
+```bash
+node build.mjs
+```
+
+或等价的 npm 脚本：
+
+```bash
+npm run build
+```
+
+- 首次运行前需先执行一次 `npm install` 安装依赖（之后不用重复）；
+- 也可以用 GitHub Desktop：仓库界面右键 → "Open in Terminal" 直接进入项目目录再执行上述命令。
+
 ## 本地预览
 
 直接用任意静态服务器打开即可，例如：

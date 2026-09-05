@@ -297,6 +297,10 @@
 
   function setCat(cat) {
     activeCat = cat;
+    // 分类写入 URL hash，从游戏页返回后可恢复
+    try {
+      history.replaceState(null, "", cat === "全部" ? location.pathname + location.search : "#cat=" + encodeURIComponent(cat));
+    } catch (e) {}
     renderNav(); render();
   }
 
@@ -329,6 +333,15 @@
     location.href = "g/" + g.id + ".html";
   });
 
+  // 从 URL hash 恢复分类（#cat=xxx），让从游戏页返回后仍停留在原分类
+  var hm = /#cat=([^&]+)/.exec(location.hash);
+  if (hm) {
+    var restored = decodeURIComponent(hm[1]);
+    var navVals = Array.prototype.map.call(document.querySelectorAll(".nav-item"), function (el) { return el.dataset.nav; });
+    if (navVals.indexOf(restored) > -1) activeCat = restored;
+  }
+
+  renderNav();
   render();
 })();
 </script>

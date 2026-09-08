@@ -208,9 +208,29 @@
 
   frame.src = "../list/" + g.id + "/" + g.entry;
 
+  // 焦点管理：iframe 不会自动获得键盘焦点（不少游戏还会 preventDefault mousedown
+  // 阻止点击聚焦），必须显式聚焦，否则方向键/空格等全部被父页面吃掉。
+  function focusGame() {
+    try { frame.contentWindow.focus(); } catch (e) {}
+  }
   frame.addEventListener("load", function () {
+    focusGame();
     setTimeout(function () { loading.classList.add("hidden"); }, 400);
     applyFit(); scheduleFit();
+  });
+  // 兜底：按键落到了父页面（焦点意外丢失，如点过顶栏按钮后再点游戏画面）时，
+  // 把键盘焦点交还给游戏；父页面自身没有需要键盘的元素。
+  document.addEventListener("keydown", function (e) {
+    var t = e.target, tag = t && t.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+    // 焦点在按钮上时保留 Enter/Space 激活按钮的标准行为，其余按键交给游戏
+    if (tag === "BUTTON" && (e.key === "Enter" || e.key === " ")) return;
+    focusGame();
+    e.preventDefault();
+  });
+  // 顶栏按钮（鼠标）点击后，把键盘焦点交还游戏，避免焦点滞留在按钮上
+  Array.prototype.forEach.call(document.querySelectorAll(".topbar .btn"), function (btn) {
+    btn.addEventListener("click", function () { setTimeout(focusGame, 0); });
   });
   // 兜底：即使 onload 不触发也隐藏 loading 并尝试适配
   setTimeout(function () { loading.classList.add("hidden"); }, 8000);

@@ -42,5 +42,6 @@ window.GAMES = [
   { id: "75", img: "thumbs/75.webp", title: "森林协奏曲", cat: "休闲", entry: "index.html", hot: false },
   { id: "79", img: "thumbs/79.webp", title: "召唤神龙", cat: "休闲", entry: "index.html", hot: true },
   { id: "eight-ball", img: "thumbs/eight-ball.webp", title: "8 Ball Pool 桌球", cat: "休闲", entry: "index.html", hot: false },
+  { id: "mfzm", img: "thumbs/mfzm.webp", title: "魔法祖玛", cat: "益智", entry: "index.html", hot: false },
   { id: "tetris", img: "thumbs/tetris.webp", title: "俄罗斯方块", cat: "休闲", entry: "index.html", hot: false },
 ];

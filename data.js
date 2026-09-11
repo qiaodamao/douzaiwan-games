@@ -43,5 +43,7 @@ window.GAMES = [
   { id: "79", img: "thumbs/79.webp", title: "召唤神龙", cat: "休闲", entry: "index.html", hot: true },
   { id: "eight-ball", img: "thumbs/eight-ball.webp", title: "8 Ball Pool 桌球", cat: "休闲", entry: "index.html", hot: false },
   { id: "mfzm", img: "thumbs/mfzm.webp", title: "魔法祖玛", cat: "益智", entry: "index.html", hot: false },
+  { id: "shenlong", img: "thumbs/shenlong.webp", title: "召唤神龙-无敌版", cat: "休闲", entry: "index.html", hot: false },
   { id: "tetris", img: "thumbs/tetris.webp", title: "俄罗斯方块", cat: "休闲", entry: "index.html", hot: false },
+  { id: "zhuzhiliao", img: "thumbs/zhuzhiliao.webp", title: "竹知了", cat: "休闲", entry: "index.html", hot: false },
 ];

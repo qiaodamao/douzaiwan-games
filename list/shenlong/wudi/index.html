@@ -99,6 +99,16 @@
 
 <!-- 广告脚本已移除：原 Google IMA / jb51 检测脚本在境内无法访问，会导致游戏卡在加载界面 -->
 <script type="text/javascript">
+    // file:// 协议（双击打开）下浏览器禁止 XHR 读取本地资源，游戏无法运行，直接给出提示
+    if (location.protocol === 'file:') {
+        var __tip = document.createElement('div');
+        __tip.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:#0a1a2a;color:#ffde9e;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;z-index:999999;text-align:center;padding:24px;box-sizing:border-box;font-family:sans-serif;';
+        __tip.innerHTML = '<div style="font-size:52px;margin-bottom:18px;">🐉</div>'
+            + '<div style="font-size:22px;font-weight:bold;margin-bottom:12px;">本地文件方式无法运行本游戏</div>'
+            + '<div style="font-size:14px;color:#8fafcf;line-height:1.8;">浏览器安全策略禁止网页读取本地资源（file:// 协议）。<br>请通过网站地址（http/https）访问本游戏，<br>例如部署到服务器后打开，或在本地启动静态服务器预览。</div>';
+        (document.body || document.documentElement).appendChild(__tip);
+        throw new Error('file:// protocol not supported, please serve over http/https');
+    }
     // 本地桩函数替代 ads.js：跳过广告，直接进入游戏
     var preloader = null; // 保持 null，goToCover 检测到后会直接调用 startGoToGame
     function showMyAds() {
